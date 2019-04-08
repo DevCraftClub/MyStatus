@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Установка модуля MyStatus 1.0</title>
+		<link rel="stylesheet" href="http://static.maxim-harder.de/extra/jquery-ui/jquery-ui.min.css">
+		<link href="http://static.maxim-harder.de/css/bootstrap-gray.min.css" rel="stylesheet">
+		<link href="assets/css/font-awesome.min.css" rel="stylesheet">
+		<style>
+			textarea {
+				transition: 0.3s all;
+			}
+			textarea:hover, textarea:active {
+				height: 100%;
+				min-height: 185px;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-default" role="navigation">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="http://maxim-harder.de/?ref=mystatus" target="_blank">Maxim Harder</a>
+			</div>
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#start">Начало</a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Навигация <i class="fa fa-angle-down"></i></a>
+						<ul class="dropdown-menu default-color">
+							<li><a href="#screens">Скриншоты</a></li>
+							<li><a href="#montage">Установка и насройка</a></li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#feedback">Обратная связь</a></li>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		</nav>
+		<div class="container">
+			<div class="row">
+				<div class="jumbotron jumbotron-default-white" id="start">
+					<h1>Установка модуля MyStatus 1.0</h1>
+					<center>
+						<img src="../logo.png" class="img-responsive img-thumbnail light-border-2px-padding" style="max-width: 600px;">
+					</center>
+					<p>Описание и возможности</p>
+					<p class="small">Сей хак, не модуль, поможет вам отобразить статус любого сериала. Тем самым уведомляя автора и/или админа о статусе. Это поможет всё быстро и без проблем оформить новость и даст пользователям понять на какой стадии находится сейчас сериал, стоит ли его ждать или уже всё предрешено для него. Хак имеет несколько больших настроек, чем проставление статусов.</p>
+					<div role="alert" class="alert alert-danger">Скрипт ищет по АПИ фильм и проставляет сам ID к новости, однако поиск точен на 50%. Иногда встречаются сериалы, которые начинаются одинакого, типа: Бойтесь ходячих мертвецов или же ремейки, то будет всегда браться первое значение из списка.</div>
+					<p class="small">О возможностях: 
+						<ul class="list-group">
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Модуль в версии UTF-8</li>
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Проверка данных по API MyShows</li>
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Проставление ID с MyShows</li>
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Проставление статуса сериала</li>
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Проставление даты выпуска последней серии, если сериал окончен</li>
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Проставление ID с TVRage, IMDB и КиноПоиска</li>
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Уведомление автора новости и/или админа о том, что статус сериала изменился</li>
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Если автор новости и админ одно лицо, то письмо отсылается один раз</li>
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Поднимает новость, если статус обновился</li>
+						</ul>
+					</p>
+					<p class="small">Статусы сериалов: 
+						<ul class="list-group">
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Снимается (returningseries) - если сериал уже выходит или ожидает нового сезона, то ставится этот сериал</li>
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Новинка (newseries) - если сериал впервые появился на MyShows, зачастую совпадает с новыми сериалами (опция отключается)</li>
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Пилотная серия (pilotordered) - если сериал стартует (или запускается следующий сезон), то часто выпускают пилотную серию, чтобы узнать мнения и она может отличаться от официальной первой серии (также отключается)</li>
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Закрыт (canceledended)- если сериал официально идёт на покой, то выводится этот статус</li>
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Приостановлен (onhiatus) - если сериал отправился по каким-то причинам, к примеру из-за смерти актёра или иного припятствия, на "паузу", то выставляется этот статус</li>
+							<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Под вопросом (tbdonthebubble) - если у сериала спорные рейтинги или низкие показатели, что даже создатели не знают будет ли продолжение или нет, то этот статус будет выводится</li>
+						</ul>
+					</p>
+				</div>
+				<div class="jumbotron jumbotron-lighter" id="screens">
+					<h1>Скриншоты</h1>
+					<div class="row download-tooltip push-up">
+						<div class="col-md-3">
+							<div class="thumbnail thumbnail-hover thumbnail-fade darker-border">
+								<div class="caption" style="display: none;">
+									<h4></h4>
+									<p></p>
+									<p>
+										<a href="assets/images/01.png" class="btn btn-cyanide" data-lightbox="image-group" title="Статус: снимается"><i class="fa fa-search"></i></a>
+									</p>
+								</div>
+								<img src="assets/images/01.png" class="img-responsive">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="thumbnail thumbnail-hover thumbnail-fade darker-border">
+								<div class="caption" style="display: none;">
+									<h4></h4>
+									<p></p>
+									<p>
+										<a href="assets/images/02.png" class="btn btn-cyanide" data-lightbox="image-group" title="Статус: закрыт"><i class="fa fa-search"></i></a>
+									</p>
+								</div>
+								<img src="assets/images/02.png" class="img-responsive">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="thumbnail thumbnail-hover thumbnail-fade darker-border">
+								<div class="caption" style="display: none;">
+									<h4></h4>
+									<p></p>
+									<p>
+										<a href="assets/images/03.png" class="btn btn-cyanide" data-lightbox="image-group" title="Статус: новинка"><i class="fa fa-search"></i></a>
+									</p>
+								</div>
+								<img src="assets/images/03.png" class="img-responsive">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="thumbnail thumbnail-hover thumbnail-fade darker-border">
+								<div class="caption" style="display: none;">
+									<h4></h4>
+									<p></p>
+									<p>
+										<a href="assets/images/04.png" class="btn btn-cyanide" data-lightbox="image-group" title="Статус: не определено"><i class="fa fa-search"></i></a>
+									</p>
+								</div>
+								<img src="assets/images/04.png" class="img-responsive">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="thumbnail thumbnail-hover thumbnail-fade darker-border">
+								<div class="caption" style="display: none;">
+									<h4></h4>
+									<p></p>
+									<p>
+										<a href="assets/images/05.png" class="btn btn-cyanide" data-lightbox="image-group" title="Статус: пилотная серия"><i class="fa fa-search"></i></a>
+									</p>
+								</div>
+								<img src="assets/images/05.png" class="img-responsive">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="thumbnail thumbnail-hover thumbnail-fade darker-border">
+								<div class="caption" style="display: none;">
+									<h4></h4>
+									<p></p>
+									<p>
+										<a href="assets/images/06.png" class="btn btn-cyanide" data-lightbox="image-group" title="Статус: приостановлен"><i class="fa fa-search"></i></a>
+									</p>
+								</div>
+								<img src="assets/images/06.png" class="img-responsive">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="thumbnail thumbnail-hover thumbnail-fade darker-border">
+								<div class="caption" style="display: none;">
+									<h4></h4>
+									<p></p>
+									<p>
+										<a href="assets/images/07.png" class="btn btn-cyanide" data-lightbox="image-group" title="Статус: не известен"><i class="fa fa-search"></i></a>
+									</p>
+								</div>
+								<img src="assets/images/07.png" class="img-responsive">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="thumbnail thumbnail-hover thumbnail-fade darker-border">
+								<div class="caption" style="display: none;">
+									<h4></h4>
+									<p></p>
+									<p>
+										<a href="assets/images/08.png" class="btn btn-cyanide" data-lightbox="image-group" title="Новое письмо"><i class="fa fa-search"></i></a>
+									</p>
+								</div>
+								<img src="assets/images/08.png" class="img-responsive">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="thumbnail thumbnail-hover thumbnail-fade darker-border">
+								<div class="caption" style="display: none;">
+									<h4></h4>
+									<p></p>
+									<p>
+										<a href="assets/images/09.png" class="btn btn-cyanide" data-lightbox="image-group" title="Письма в ящике"><i class="fa fa-search"></i></a>
+									</p>
+								</div>
+								<img src="assets/images/09.png" class="img-responsive">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="thumbnail thumbnail-hover thumbnail-fade darker-border">
+								<div class="caption" style="display: none;">
+									<h4></h4>
+									<p></p>
+									<p>
+										<a href="assets/images/10.png" class="btn btn-cyanide" data-lightbox="image-group" title="Само письмо"><i class="fa fa-search"></i></a>
+									</p>
+								</div>
+								<img src="assets/images/10.png" class="img-responsive">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="thumbnail thumbnail-hover thumbnail-fade darker-border">
+								<div class="caption" style="display: none;">
+									<h4></h4>
+									<p></p>
+									<p>
+										<a href="assets/images/11.png" class="btn btn-cyanide" data-lightbox="image-group" title="Список с релизами"><i class="fa fa-search"></i></a>
+									</p>
+								</div>
+								<img src="assets/images/11.png" class="img-responsive">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="thumbnail thumbnail-hover thumbnail-fade darker-border">
+								<div class="caption" style="display: none;">
+									<h4></h4>
+									<p></p>
+									<p>
+										<a href="assets/images/12.png" class="btn btn-cyanide" data-lightbox="image-group" title="Настройки модуля"><i class="fa fa-search"></i></a>
+									</p>
+								</div>
+								<img src="assets/images/12.png" class="img-responsive">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="thumbnail thumbnail-hover thumbnail-fade darker-border">
+								<div class="caption" style="display: none;">
+									<h4></h4>
+									<p></p>
+									<p>
+										<a href="assets/images/13.png" class="btn btn-cyanide" data-lightbox="image-group" title="Поле с ID MyShows"><i class="fa fa-search"></i></a>
+									</p>
+								</div>
+								<img src="assets/images/13.png" class="img-responsive">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="thumbnail thumbnail-hover thumbnail-fade darker-border">
+								<div class="caption" style="display: none;">
+									<h4></h4>
+									<p></p>
+									<p>
+										<a href="assets/images/14.png" class="btn btn-cyanide" data-lightbox="image-group" title="Доп. поле"><i class="fa fa-search"></i></a>
+									</p>
+								</div>
+								<img src="assets/images/14.png" class="img-responsive">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="jumbotron jumbotron-default-white" id="montage">
+					<h1>Установка</h1>
+					<ul class="list-group">
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Для версий 12.х и ниже - залить файлы из папки uploads в корень сайта. Если версия DLE 13.х, то установите плагин и переходите к <a href="#for13">этому пункту</a></li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Запустите файл install.php в корне вашего сайта, а затем удалите</li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> В шаблонах откройте файл fullstory.tpl и пропишите в самом низу файла<br>
+						<code>{include file="engine/modules/mystatus.php?mysid={myshows}&title={title}&news_id={news-id}"}</code><br><br>
+						В нужное место ставим<br>
+						<code>&#060;div class&#061;&#034;status &#123;statuss&#125;&#034;&#062;&#123;status&#125;&#060;&#047;div&#062;</code></li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Открываем engine/inc/addnews.php и ищем<br>
+						<textarea class="form-control"><div class="form-group">
+							  <label class="control-label col-md-2">{$lang['addnews_cat']}</label>
+							  <div class="col-md-10">
+								<select data-placeholder="{$lang['addnews_cat_sel']}" name="category[]" id="category" onchange="onCategoryChange(this)" $category_multiple style="width:100%;max-width:350px;">{$categories_list}</select>
+							  </div>
+							</div>
+						</textarea><br>ниже добавляем<br>
+						<textarea class="form-control">
+							 <div class="form-group">
+							  <label class="control-label col-md-2">MyShows ID</label>
+							  <div class="col-md-10">
+								<input type="text" name="myshows" size="20" >
+							  </div>
+							</div>
+						</textarea><br>
+						находим <code>$disable_index = isset( $_POST['disable_index'] ) ? intval( $_POST['disable_index'] ) : 0;</code><br>
+						ниже ставим <code>$myshowsid = intval($_POST['myshows']);</code><br>
+						находим <code>tags, metatitle</code><br>
+						после ставим <code>, myshowsid</code><br>
+						находим <code>'{$_POST['tags']}', '{$metatags['title']}'</code><br>
+						после ставим <code>, '$myshowsid'</code><br>
+						</li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Открываем engine/inc/editnews.php и ищем<br>
+						<textarea class="form-control"><div class="form-group">
+							  <label class="control-label col-md-2">{$lang['edit_cat']}</label>
+							  <div class="col-md-10">
+								<select data-placeholder="{$lang['addnews_cat_sel']}" name="category[]" id="category" onchange="onCategoryChange(this)" {$category_multiple} style="width:350px;">{$categories_list}</select>
+							  </div>
+							 </div>
+						</textarea><br>ниже добавляем<br>
+						<textarea class="form-control">
+							<div class="form-group">
+							  <label class="control-label col-md-2">MyShows ID</label>
+							  <div class="col-md-10">
+								<input type="text" name="myshows" size="20" value="{$row['myshowsid']}">
+							  </div>
+							 </div>
+						</textarea><br>
+						находим <code>$disable_index = isset( $_POST['disable_index'] ) ? intval( $_POST['disable_index'] ) : 0;</code><br>
+						ниже ставим <code>$myshowsid = intval($_POST['myshows']);</code><br>
+						находим (дважды) <code>metatitle='{$metatags['title']}'</code><br>
+						после ставим (дважды) <code>, myshowsid='{$myshowsid}'</code>
+						</li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Открываем файл engine/modules/show.full.php и находим <br>
+						<code>if ($row['metatitle']) $metatags['header_title'] = $row['metatitle'];</code><br>
+						Ниже прописываем<br>
+						<textarea class="form-control">
+						include ENGINE_DIR . "/data/mystatus.php";
+						$xfieldsdata = xfieldsdataload( $row['xfields'] );
+
+						$tpl->set("{myshows}", $row['myshowsid']);
+						
+						//Определяем статус и выводим его
+						$xfieldsdata[$mystatus_cfg['xfield']] = trim( $xfieldsdata[$mystatus_cfg['xfield']] );
+						
+						if($xfieldsdata[$mystatus_cfg['xfield']] == "canceledended") {
+							$statusname = $mystatus_cfg['closed'];
+						} elseif($xfieldsdata[$mystatus_cfg['xfield']] == "returningseries") {
+							$statusname = $mystatus_cfg['onair'];
+						} elseif($xfieldsdata[$mystatus_cfg['xfield']] == "tbdothebubble") {
+							$statusname = $mystatus_cfg['tbd'];
+						} elseif($xfieldsdata[$mystatus_cfg['xfield']] == "onhiatus") {
+							$statusname = $mystatus_cfg['pause'];
+						} elseif($mystatus_cfg['pilots'] && $xfieldsdata[$mystatus_cfg['xfield']] == "pilotordered") {
+							$statusname = $mystatus_cfg['pilot'];
+						} elseif($mystatus_cfg['news'] && $xfieldsdata[$mystatus_cfg['xfield']] == "newseries") {
+							$statusname = $mystatus_cfg['new'];
+						} else {
+							$statusname = $mystatus_cfg['none'];
+						}
+						
+						$tpl->set( '{statuss}', $xfieldsdata[$mystatus_cfg['xfield']] );
+						$tpl->set( '{status}', $statusname );
+						</textarea>
+						</li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Открываем файл engine/modules/show.short.php/engine/modules/show.custom.php (если хотим, чтобы статус отображался и короткой новости или в построенной через кастом) и находим 2ой<br>
+						<code>$tpl->compile( 'content' );</code><br>
+						<textarea class="form-control">
+						$tpl->compile( 'content' );
+
+    }
+
+    if( $user_group[$member_id['user_group']]['allow_hide'] ) $tpl->result['content'] = str_ireplace( "[hide]", "", str_ireplace( "[/hide]", "", $tpl->result['content']) );
+						</textarea>
+						<br>
+						Выше прописываем<br>
+						<textarea class="form-control">
+						include ENGINE_DIR . "/data/mystatus.php";
+						$xfieldsdata = xfieldsdataload( $row['xfields'] );
+
+						$tpl->set("{myshows}", $row['myshowsid']);
+						
+						//Определяем статус и выводим его
+						$xfieldsdata[$mystatus_cfg['xfield']] = trim( $xfieldsdata[$mystatus_cfg['xfield']] );
+						
+						if($xfieldsdata[$mystatus_cfg['xfield']] == "canceledended") {
+							$statusname = $mystatus_cfg['closed'];
+						} elseif($xfieldsdata[$mystatus_cfg['xfield']] == "returningseries") {
+							$statusname = $mystatus_cfg['onair'];
+						} elseif($xfieldsdata[$mystatus_cfg['xfield']] == "tbdothebubble") {
+							$statusname = $mystatus_cfg['tbd'];
+						} elseif($xfieldsdata[$mystatus_cfg['xfield']] == "onhiatus") {
+							$statusname = $mystatus_cfg['pause'];
+						} elseif($mystatus_cfg['pilots'] && $xfieldsdata[$mystatus_cfg['xfield']] == "pilotordered") {
+							$statusname = $mystatus_cfg['pilot'];
+						} elseif($mystatus_cfg['news'] && $xfieldsdata[$mystatus_cfg['xfield']] == "newseries") {
+							$statusname = $mystatus_cfg['new'];
+						} else {
+							$statusname = $mystatus_cfg['none'];
+						}
+						
+						$tpl->set( '{statuss}', $xfieldsdata[$mystatus_cfg['xfield']] );
+						$tpl->set( '{status}', $statusname );
+						</textarea><br><br><a name="for13" id="for13"></a>
+						В нужное место в shortstory.tpl или в шаблон, что подключён через кастом, ставим<br>
+						<code>&#060;div class&#061;&#034;status &#123;statuss&#125;&#034;&#062;&#123;status&#125;&#060;&#047;div&#062;</code>
+						</li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Открываем файл со стилями шаблона и в самый низ прописываем это<br>
+						<textarea class="form-control">
+.status,.status.normal {
+    float: right;
+    margin-top: -35px;
+    font-style: normal;
+    opacity: 0.6;
+	color: #000;
+	transition: all 0.3s;
+	font-weight: 700;
+}
+.status:hover {
+    opacity: 1;
+	cursor: pointer;
+	animation: shake linear 0.5s;
+	animation-iteration-count: 1;
+	transform-origin: 50% 0%;
+	-webkit-animation: shake linear 0.5s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-transform-origin: 50% 0%;
+	-moz-animation: shake linear 0.5s;
+	-moz-animation-iteration-count: 1;
+	-moz-transform-origin: 50% 0%;
+	-o-animation: shake linear 0.5s;
+	-o-animation-iteration-count: 1;
+	-o-transform-origin: 50% 0%;
+	-ms-animation: shake linear 0.5s;
+	-ms-animation-iteration-count: 1;
+	-ms-transform-origin: 50% 0%;
+}
+.status.returningseries {
+	color: #ebffdd;
+	text-shadow: 0 0 1px black,0 0 2px #5cad21,0 0 3px #549e1e,0 0 4px #3d8806;
+}
+.status.canceledended {
+    color: #ffd4d4;
+    text-shadow: 0 0 1px black,0 0 2px #ff0000,0 0 3px #bf2727,0 0 4px #792323;
+}
+.status.onhiatus {
+	color: #ffecbf;
+    text-shadow: 0 0 1px black,0 0 2px #ffb300,0 0 3px #cc971a,0 0 4px #daa321;
+}
+.status.tbdonthebubble {
+	color: #e8faff;
+    text-shadow: 0 0 1px black,0 0 2px #1bc1ff,0 0 3px #4ae7ea,0 0 4px #277890;
+}
+.status.pilotordered {
+	color: #e0ebff;
+    text-shadow: 0 0 1px black,0 0 2px #0058ff,0 0 3px #275dc5,0 0 4px #93aee0;
+}
+.status.newseries {
+	color: #fae2ff;
+    text-shadow: 0 0 1px black,0 0 2px #d600ff,0 0 3px #89319a,0 0 4px #631a71;
+}
+
+@keyframes shake{
+  0% {
+    transform:  rotate(0deg) ;
+  }
+  20% {
+    transform:  rotate(15deg) ;
+  }
+  40% {
+    transform:  rotate(-10deg) ;
+  }
+  60% {
+    transform:  rotate(5deg) ;
+  }
+  80% {
+    transform:  rotate(-5deg) ;
+  }
+  100% {
+    transform:  rotate(0deg) ;
+  }
+}
+
+@-moz-keyframes shake{
+  0% {
+    -moz-transform:  rotate(0deg) ;
+  }
+  20% {
+    -moz-transform:  rotate(15deg) ;
+  }
+  40% {
+    -moz-transform:  rotate(-10deg) ;
+  }
+  60% {
+    -moz-transform:  rotate(5deg) ;
+  }
+  80% {
+    -moz-transform:  rotate(-5deg) ;
+  }
+  100% {
+    -moz-transform:  rotate(0deg) ;
+  }
+}
+
+@-webkit-keyframes shake {
+  0% {
+    -webkit-transform:  rotate(0deg) ;
+  }
+  20% {
+    -webkit-transform:  rotate(15deg) ;
+  }
+  40% {
+    -webkit-transform:  rotate(-10deg) ;
+  }
+  60% {
+    -webkit-transform:  rotate(5deg) ;
+  }
+  80% {
+    -webkit-transform:  rotate(-5deg) ;
+  }
+  100% {
+    -webkit-transform:  rotate(0deg) ;
+  }
+}
+
+@-o-keyframes shake {
+  0% {
+    -o-transform:  rotate(0deg) ;
+  }
+  20% {
+    -o-transform:  rotate(15deg) ;
+  }
+  40% {
+    -o-transform:  rotate(-10deg) ;
+  }
+  60% {
+    -o-transform:  rotate(5deg) ;
+  }
+  80% {
+    -o-transform:  rotate(-5deg) ;
+  }
+  100% {
+    -o-transform:  rotate(0deg) ;
+  }
+}
+
+@-ms-keyframes shake {
+  0% {
+    -ms-transform:  rotate(0deg) ;
+  }
+  20% {
+    -ms-transform:  rotate(15deg) ;
+  }
+  40% {
+    -ms-transform:  rotate(-10deg) ;
+  }
+  60% {
+    -ms-transform:  rotate(5deg) ;
+  }
+  80% {
+    -ms-transform:  rotate(-5deg) ;
+  }
+  100% {
+    -ms-transform:  rotate(0deg) ;
+  }
+}
+
+@-o-keyframes animationFrames {
+  0% {
+    -o-transform:  rotate(0deg) ;
+  }
+  20% {
+    -o-transform:  rotate(15deg) ;
+  }
+  40% {
+    -o-transform:  rotate(-10deg) ;
+  }
+  60% {
+    -o-transform:  rotate(5deg) ;
+  }
+  80% {
+    -o-transform:  rotate(-5deg) ;
+  }
+  100% {
+    -o-transform:  rotate(0deg) ;
+  }
+}
+
+@-ms-keyframes animationFrames {
+  0% {
+    -ms-transform:  rotate(0deg) ;
+  }
+  20% {
+    -ms-transform:  rotate(15deg) ;
+  }
+  40% {
+    -ms-transform:  rotate(-10deg) ;
+  }
+  60% {
+    -ms-transform:  rotate(5deg) ;
+  }
+  80% {
+    -ms-transform:  rotate(-5deg) ;
+  }
+  100% {
+    -ms-transform:  rotate(0deg) ;
+  }
+}
+						</textarea>
+						</li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Создаём доп. поле<br>
+						<b>Название поля</b>, <b>Описание поля</b> и <b>Категория</b> на своё усмотрение<br>
+						<b>Тип поля</b>: Список<br>
+						<b>Значение по умолчанию</b>:<br>
+						Для DLE 11 и выше можно сделать так<br>
+						<div class="well">
+							returningseries|Снимается<br>
+							newseries|Новинка<br>
+							pilotordered|Пилотная серия<br>
+							canceledended|Закрыт<br>
+							onhiatus|Приостановлен<br>
+							tbdonthebubble|Под вопросом
+						</div><br>
+						Для версий ниже поля должны выглядеть так<br>
+						<div class="well">
+							returningseries<br>
+							newseries<br>
+							pilotordered<br>
+							canceledended<br>
+							onhiatus<br>
+							tbdonthebubble
+						</div>
+						</li>
+					</ul>
+					<h1>Теги для подключения в файле fullstory.tpl</h1>
+					<ul class="list-group list-group-inverse list-group-darker">
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> {myshows} - идентификатор на сайте myshows.me</li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> {news-id} - стандартный тег дле, означающий идентификатор новости</li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> {title} - вывод заголовка, стандартный тег</li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> {statuss} - тег, который определяет стиль для статуса</li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> {status} - вывод самого статуса</li>
+					</ul>
+					<h1>Теги в строке подключения</h1>
+					<ul class="list-group">
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> mysid - к нему подключается ID с MyShows, тег {myshows}</li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> title - если в бд не указан ID, то скрипт будет искать по ID по АПИ и проставит в новость</li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> news_id - обязательный тег, который подключает ID новости к скрипту</li>
+					</ul>
+				</div>
+				<div class="jumbotron jumbotron-lighter" id="feedback">
+					<h1>Связь</h1>
+					<ul class="list-group list-group-inverse list-group-darker">
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Напишите мне E-Mail: <a href="mailto:info@maxim-harder.de">info@maxim-harder.de</a></li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Напишите мне в Skype: maxim_harder (Максим Гардер [Maxim Harder])</li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Напишите мне vk.com: <a href="http://vk.com/mharder" target="_blank">mharder</a></li>
+						<li class="list-group-item"><i class="fa fa-arrow-circle-o-right"></i> Напишите мне у меня на сайте, там и обновления: <a href="http://maxim-harder.de/index.php?do=pm&doaction=newpm&username=Maxim" target="_blank">Maxim</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script>window.jQuery || document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js">\x3C/script>')</script>
+		<script src="http://static.maxim-harder.de/extra/jquery-ui/jquery-ui.min.js"></script>
+		<script src="http://static.maxim-harder.de/js/bootstrap.min.js"></script>
+		<script src="http://static.maxim-harder.de/extra/lightbox2/lightbox-2.6.min.js"></script>
+		<script src="http://static.maxim-harder.de/docs/js/images.js"></script>
+		<script src="http://static.maxim-harder.de/extra/magnific-popup/jquery.magnific-popup.min.js"></script>
+		<script src="http://static.maxim-harder.de/extra/hover-dropdown/bootstrap-hover-dropdown.js"></script>
+	</body>
+</html>
